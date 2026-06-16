@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | RecoverPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans">
 
+    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+        <div class="text-2xl font-extrabold text-blue-600 tracking-tight">
+            Recover<span class="text-gray-800">Pro</span>
+        </div>
+        <button id="logoutBtn" class="bg-red-50 text-red-600 font-semibold py-2 px-4 rounded-lg hover:bg-red-100 transition duration-300">
+            Logout
+        </button>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 py-10">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl font-bold text-gray-800">Welcome to your Dashboard 👋</h1>
+            <p class="text-gray-600 mt-2">अपना बैन हुआ प्लेटफार्म चुनें और रिकवरी प्रोसेस शुरू करें।</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Instagram</h3>
+                <p class="text-sm text-gray-500 mb-4">Suspended, Disabled or Hacked account recovery steps.</p>
+                <button class="text-blue-600 font-semibold text-sm hover:underline">View Guide &rarr;</button>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Telegram</h3>
+                <p class="text-sm text-gray-500 mb-4">Banned numbers and restricted groups recovery.</p>
+                <button class="text-blue-600 font-semibold text-sm hover:underline">View Guide &rarr;</button>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Facebook</h3>
+                <p class="text-sm text-gray-500 mb-4">Disabled ad accounts and locked profiles.</p>
+                <button class="text-blue-600 font-semibold text-sm hover:underline">View Guide &rarr;</button>
+            </div>
+        </div>
+
+        <section class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">⚡ Auto Appeal Generator</h2>
+            <p class="text-gray-600 mb-6">कंपनी को भेजने के लिए एक प्रोफेशनल और लीगल अपील लेटर तैयार करें।</p>
+            
+            <form id="appealForm" class="space-y-4 max-w-2xl">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">प्लेटफार्म चुनें</label>
+                    <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option>Instagram</option>
+                        <option>Telegram</option>
+                        <option>Facebook</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">बैन होने का कारण (Reason)</label>
+                    <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option>गलती से सस्पेंड हुआ (By Mistake)</option>
+                        <option>Mass Reporting</option>
+                        <option>Community Guidelines Strike</option>
+                        <option>मुझे कारण नहीं पता</option>
+                    </select>
+                </div>
+                <button type="button" class="bg-gray-900 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-800 transition shadow-md">
+                    Generate Appeal Letter
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // तुम्हारी Firebase Configuration (ये वही पुरानी वाली है)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEUHICLM_3ynHWwnrvVSZuGd34ti590lk",
+            authDomain: "recoverpro-7591d.firebaseapp.com",
+            projectId: "recoverpro-7591d",
+            storageBucket: "recoverpro-7591d.firebasestorage.app",
+            messagingSenderId: "793303842896",
+            appId: "1:793303842896:web:c5c0dfc443cd3ec11f9155"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Security: अगर कोई बिना लॉगिन के इस पेज पर आए, तो उसे वापस login.html पर भेज दो
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Logout Button Logic
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                signOut(auth).then(() => {
+                    window.location.href = "login.html";
+                }).catch((error) => {
+                    alert("Error logging out: " + error.message);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
