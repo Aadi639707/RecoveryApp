@@ -1,1 +1,22 @@
+/* वेबसाइट को स्मूथ स्क्रॉलिंग देना */
+html {
+    scroll-behavior: smooth;
+}
 
+/* कस्टम प्रीमियम स्क्रॉलबार */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2563eb; /* Tailwind वाला नीला रंग */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8; /* होवर करने पर डार्क नीला */
+}
