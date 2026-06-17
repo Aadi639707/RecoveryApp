@@ -1,8 +1,6 @@
-// Firebase SDKs को इम्पोर्ट करना (CDN Modules का इस्तेमाल करके)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// तुम्हारी Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBEUHICLM_3ynHWwnrvVSZuGd34ti590lk",
   authDomain: "recoverpro-7591d.firebaseapp.com",
@@ -12,25 +10,35 @@ const firebaseConfig = {
   appId: "1:793303842896:web:c5c0dfc443cd3ec11f9155"
 };
 
-// Firebase को इनिशियलाइज़ करना
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 // -----------------------------------------------------
-// 1. REGISTER FORM LOGIC (नया अकाउंट बनाने के लिए)
+// 1. CHECK GOOGLE REDIRECT RESULT (लॉगिन के बाद डैशबोर्ड पर भेजने के लिए)
+// -----------------------------------------------------
+getRedirectResult(auth).then((result) => {
+    if (result !== null) {
+        window.location.href = "dashboard.html";
+    }
+}).catch((error) => {
+    console.error("Google Login Error:", error);
+});
+
+// -----------------------------------------------------
+// 2. REGISTER FORM LOGIC 
 // -----------------------------------------------------
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // पेज को रिलोड होने से रोकना
+        e.preventDefault();
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 alert("Account created successfully!");
-                window.location.href = "dashboard.html"; // डैशबोर्ड पर भेजें
+                window.location.href = "dashboard.html";
             })
             .catch((error) => {
                 alert("Error: " + error.message);
@@ -39,7 +47,7 @@ if (registerForm) {
 }
 
 // -----------------------------------------------------
-// 2. LOGIN FORM LOGIC (पुराने यूज़र के लिए)
+// 3. LOGIN FORM LOGIC 
 // -----------------------------------------------------
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
@@ -51,7 +59,7 @@ if (loginForm) {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 alert("Login successful!");
-                window.location.href = "dashboard.html"; // डैशबोर्ड पर भेजें
+                window.location.href = "dashboard.html";
             })
             .catch((error) => {
                 alert("Error: Invalid Email or Password!");
@@ -60,19 +68,12 @@ if (loginForm) {
 }
 
 // -----------------------------------------------------
-// 3. GOOGLE SIGN-IN LOGIC (एक क्लिक लॉगिन के लिए)
+// 4. GOOGLE SIGN-IN LOGIC (मोबाइल फ्रेंडली - Redirect)
 // -----------------------------------------------------
 const googleBtn = document.getElementById('googleLoginBtn');
 if (googleBtn) {
     googleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        signInWithPopup(auth, googleProvider)
-            .then((result) => {
-                alert("Google Login Successful!");
-                window.location.href = "dashboard.html";
-            })
-            .catch((error) => {
-                alert("Google Login Error: " + error.message);
-            });
+        signInWithRedirect(auth, googleProvider);
     });
 }
